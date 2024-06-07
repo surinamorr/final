@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
-  private apiUrl = 'http://localhost:3000/api/customers'; // Adjust the URL as per your backend setup
+  private apiUrl = `${environment.apiUrl}/customers`;
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -15,7 +16,6 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
-  // Fetch all customers
   getCustomers(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl)
       .pipe(
@@ -23,7 +23,6 @@ export class CustomerService {
       );
   }
 
-  // Fetch a single customer by ID
   getCustomerById(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<any>(url)
@@ -32,7 +31,6 @@ export class CustomerService {
       );
   }
 
-  // Add a new customer
   addCustomer(customer: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, customer, this.httpOptions)
       .pipe(
@@ -40,7 +38,6 @@ export class CustomerService {
       );
   }
 
-  // Update an existing customer
   updateCustomer(id: number, customer: any): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.put(url, customer, this.httpOptions)
@@ -49,7 +46,6 @@ export class CustomerService {
       );
   }
 
-  // Delete a customer
   deleteCustomer(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<any>(url, this.httpOptions)
@@ -58,7 +54,6 @@ export class CustomerService {
       );
   }
 
-  // Handle HTTP operation that failed
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);

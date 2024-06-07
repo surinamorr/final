@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { OrderService } from 'src/app/services/order.service';
+import { OrderService } from '../services/order.service';
 
 @Component({
   selector: 'app-orders',
@@ -8,35 +8,57 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class OrdersComponent {
   orders: any[] = [];
+  order = { customer_id: 0, order_date: '', total_price: 0, status: '', orderDetails: [] };
 
   constructor(private orderService: OrderService) {
     this.loadOrders();
   }
 
-  loadOrders(): void {
-    this.orderService.getOrders().subscribe(data => {
-      this.orders = data;
-    });
-  }
-
-  addOrder(order: any): void {
-    this.orderService.addOrder(order).subscribe(newOrder => {
-      this.orders.push(newOrder);
-    });
-  }
-
-  updateOrder(id: number, order: any): void {
-    this.orderService.updateOrder(id, order).subscribe(updatedOrder => {
-      const index = this.orders.findIndex(o => o.order_id === id);
-      if (index !== -1) {
-        this.orders[index] = updatedOrder;
+  loadOrders() {
+    this.orderService.getOrders().subscribe(
+      (data) => {
+        this.orders = data;
+      },
+      (error) => {
+        console.error('Error fetching orders', error);
       }
-    });
+    );
   }
 
-  deleteOrder(id: number): void {
-    this.orderService.deleteOrder(id).subscribe(() => {
-      this.orders = this.orders.filter(o => o.order_id !== id);
-    });
+  addOrder() {
+    this.orderService.addOrder(this.order).subscribe(
+      (data) => {
+        this.orders.push(data);
+        this.order = { customer_id: 0, order_date: '', total_price: 0, status: '', orderDetails: [] };
+      },
+      (error) => {
+        console.error('Error adding order', error);
+      }
+    );
+  }
+
+  updateOrder(id: number, order: any) {
+    this.orderService.updateOrder(id, order).subscribe(
+      (data) => {
+        const index = this.orders.findIndex(o => o.id === id);
+        if (index !== -1) {
+          this.orders[index] = data;
+        }
+      },
+      (error) => {
+        console.error('Error updating order', error);
+      }
+    );
+  }
+
+  deleteOrder(id: number) {
+    this.orderService.deleteOrder(id).subscribe(
+      () => {
+        this.orders = this.orders.filter(order => order.id !== id);
+      },
+      (error: any) => {
+        console.error('Error deleting order', error);
+      }
+    );
   }
 }

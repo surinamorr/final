@@ -1,1 +1,66 @@
-<p>orders works!</p>
+<div class="orders-container">
+  <h2>Orders</h2>
+
+  <!-- Form to Add New Order -->
+  <div class="order-form">
+    <h3>Add New Order</h3>
+    <form (ngSubmit)="addOrder(); newOrderForm.reset()" #newOrderForm="ngForm">
+      <div>
+        <label for="customer_id">Customer ID:</label>
+        <input type="number" id="customer_id" name="customer_id" [(ngModel)]="order.customer_id" required>
+      </div>
+      <div>
+        <label for="order_date">Order Date:</label>
+        <input type="date" id="order_date" name="order_date" [(ngModel)]="order.order_date" required>
+      </div>
+      <div>
+        <label for="total_price">Total Price:</label>
+        <input type="number" id="total_price" name="total_price" [(ngModel)]="order.total_price" required>
+      </div>
+      <button type="submit">Add Order</button>
+    </form>
+  </div>
+
+  <!-- Orders List -->
+  <div class="orders-list">
+    <h3>Orders List</h3>
+    <ul>
+      <li *ngFor="let order of orders">
+        <div>
+          <strong>Order ID:</strong> {{order.order_id}}
+        </div>
+        <div>
+          <strong>Customer ID:</strong> {{order.customer_id}}
+        </div>
+        <div>
+          <strong>Order Date:</strong> {{order.order_date | date}}
+        </div>
+        <div>
+          <strong>Total Price:</strong> {{order.total_price | currency}}
+        </div>
+        <button (click)="deleteOrder(order.order_id)">Delete</button>
+        <button (click)="order.isEditing = !order.isEditing">Edit</button>
+
+        <!-- Edit Order Form -->
+        <div *ngIf="order.isEditing">
+          <form (ngSubmit)="updateOrder(order.order_id, order); order.isEditing = false">
+            <div>
+              <label for="edit_customer_id">Customer ID:</label>
+              <input type="number" id="edit_customer_id" [(ngModel)]="order.customer_id" name="edit_customer_id" required>
+            </div>
+            <div>
+              <label for="edit_order_date">Order Date:</label>
+              <input type="date" id="edit_order_date" [(ngModel)]="order.order_date" name="edit_order_date" required>
+            </div>
+            <div>
+              <label for="edit_total_price">Total Price:</label>
+              <input type="number" id="edit_total_price" [(ngModel)]="order.total_price" name="edit_total_price" required>
+            </div>
+            <button type="submit">Update Order</button>
+            <button type="button" (click)="order.isEditing = false">Cancel</button>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
