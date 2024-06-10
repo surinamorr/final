@@ -1,0 +1,46 @@
+<div class="orders-container">
+    <h2>Orders</h2>
+  
+    <!-- Orders List -->
+    <div class="orders-list">
+      <h3>Orders List</h3>
+      <ul>
+        <li *ngFor="let order of orders">
+          <div>
+            <strong>Order ID:</strong> {{order.order_id}}
+          </div>
+          <div>
+            <strong>Customer ID:</strong> {{order.user_id}}
+          </div>
+          <div>
+            <strong>Order Date:</strong> {{order.order_date | date}}
+          </div>
+          <div>
+            <strong>Total Price:</strong> {{order.total_price | currency}}
+          </div>
+          <button (click)="order.isEditing = !order.isEditing">Edit</button>
+  
+          <!-- Edit Order Form -->
+          <div *ngIf="order.isEditing">
+            <form (ngSubmit)="updateOrder(order.order_id, order); order.isEditing = false">
+              <div>
+                <label for="edit_user_id">Customer ID:</label>
+                <input type="number" id="edit_user_id" [(ngModel)]="order.user_id" name="edit_user_id" required>
+              </div>
+              <div>
+                <label for="edit_order_date">Order Date:</label>
+                <input type="date" id="edit_order_date" [(ngModel)]="order.order_date" name="edit_order_date" required>
+              </div>
+              <div>
+                <label for="edit_total_price">Total Price:</label>
+                <input type="number" id="edit_total_price" [(ngModel)]="order.total_price" name="edit_total_price" required>
+              </div>
+              <button type="submit">Update Order</button>
+              <button type="button" (click)="order.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  

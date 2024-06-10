@@ -1,0 +1,21 @@
+<div class="order-controls">
+    <h2>Order Controls</h2>
+    <button (click)="navigateTo('all-orders')">All Orders</button>
+    <button (click)="navigateTo('create-order')">Create Order</button>
+    <button (click)="navigateTo('update-order')">Update Order</button>
+    <button (click)="navigateTo('delete-order')">Delete Order</button>
+    <button (click)="navigateTo('all-order-details')">All Order Details</button>
+    
+    <div>
+      <label for="order-id">Enter Order ID:</label>
+      <input type="number" id="order-id" [(ngModel)]="orderId">
+      <button (click)="navigateToSingleOrder()">Single Order</button>
+    </div>
+  
+    <div>
+      <label for="order-details-id">Enter Order Details ID:</label>
+      <input type="number" id="order-details-id" [(ngModel)]="orderDetailsId">
+      <button (click)="navigateToSingleOrderDetails()">Single Order Details</button>
+    </div>
+  </div>
+  

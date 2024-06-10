@@ -1,0 +1,132 @@
+<div class="menu-container">
+    <h2>Menu</h2>
+  
+    <!-- Starters List -->
+    <div class="menu-category">
+      <h3>Starters</h3>
+      <ul>
+        <li *ngFor="let starter of starters">
+          <div>
+            <strong>Name:</strong> {{starter.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{starter.price | currency}}
+          </div>
+          <button (click)="starter.isEditing = !starter.isEditing">Edit</button>
+    
+          <!-- Edit Starter Form -->
+          <div *ngIf="starter.isEditing">
+            <form (ngSubmit)="updateStarter(starter.starter_id, starter); starter.isEditing = false">
+              <div>
+                <label for="edit_name">Name:</label>
+                <input type="text" id="edit_name" [(ngModel)]="starter.name" name="edit_name" required>
+              </div>
+              <div>
+                <label for="edit_last_name">Price:</label>
+                <input type="text" id="edit_price" [(ngModel)]="starter.price" name="edit_price" required>
+              </div>
+              <button type="submit">Update Starter</button>
+              <button type="button" (click)="starter.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Mains List -->
+    <div class="menu-category">
+      <h3>Mains</h3>
+      <ul>
+        <li *ngFor="let main of mains">
+          <div>
+            <strong>Name:</strong> {{main.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{main.price | currency}}
+          </div>
+          <button (click)="main.isEditing = !main.isEditing">Edit</button>
+    
+          <!-- Edit Main Form -->
+          <div *ngIf="main.isEditing">
+            <form (ngSubmit)="updateMain(main.main_id, main); main.isEditing = false">
+              <div>
+                <label for="edit_name">Name:</label>
+                <input type="text" id="edit_name" [(ngModel)]="main.name" name="edit_name" required>
+              </div>
+              <div>
+                <label for="edit_last_name">Price:</label>
+                <input type="text" id="edit_price" [(ngModel)]="main.price" name="edit_price" required>
+              </div>
+              <button type="submit">Update Main</button>
+              <button type="button" (click)="main.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Desserts List -->
+    <div class="menu-category">
+      <h3>Desserts</h3>
+      <ul>
+        <li *ngFor="let dessert of desserts">
+          <div>
+            <strong>Name:</strong> {{dessert.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{dessert.price | currency}}
+          </div>
+          <button (click)="dessert.isEditing = !dessert.isEditing">Edit</button>
+    
+          <!-- Edit dessert Form -->
+          <div *ngIf="dessert.isEditing">
+            <form (ngSubmit)="updateDessert(dessert.dessert_id, dessert); dessert.isEditing = false">
+              <div>
+                <label for="edit_name">Name:</label>
+                <input type="text" id="edit_name" [(ngModel)]="dessert.name" name="edit_name" required>
+              </div>
+              <div>
+                <label for="edit_last_name">Price:</label>
+                <input type="text" id="edit_price" [(ngModel)]="dessert.price" name="edit_price" required>
+              </div>
+              <button type="submit">Update Dessert</button>
+              <button type="button" (click)="dessert.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Sides List -->
+    <div class="menu-category">
+      <h3>Sides</h3>
+      <ul>
+        <li *ngFor="let side of sides">
+          <div>
+            <strong>Name:</strong> {{side.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{side.price | currency}}
+          </div>
+          <button (click)="side.isEditing = !side.isEditing">Edit</button>
+    
+          <!-- Edit Side Form -->
+          <div *ngIf="side.isEditing">
+            <form (ngSubmit)="updateSide(side.side_id, side); side.isEditing = false">
+              <div>
+                <label for="edit_name">Name:</label>
+                <input type="text" id="edit_name" [(ngModel)]="side.name" name="edit_name" required>
+              </div>
+              <div>
+                <label for="edit_last_name">Price:</label>
+                <input type="text" id="edit_price" [(ngModel)]="side.price" name="edit_price" required>
+              </div>
+              <button type="submit">Update Side</button>
+              <button type="button" (click)="side.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  

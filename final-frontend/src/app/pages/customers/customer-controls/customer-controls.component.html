@@ -1,0 +1,14 @@
+<div class="customer-controls">
+    <h2>Customer Controls</h2>
+    <button (click)="navigateTo('all-customers')">All Customers</button>
+    <button (click)="navigateTo('create-customer')">Create Customer</button>
+    <button (click)="navigateTo('update-customer')">Update Customer</button>
+    <button (click)="navigateTo('delete-customer')">Delete Customer</button>
+    
+    <div>
+      <label for="customer-id">Enter Customer ID:</label>
+      <input type="number" id="customer-id" [(ngModel)]="customerId">
+      <button (click)="navigateToSingleCustomer()">Single Customer</button>
+    </div>
+</div>
+  

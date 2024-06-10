@@ -1,0 +1,53 @@
+<div class="customers-container">
+    <h2>Customers</h2>
+  
+    <!-- Customers List -->
+    <div class="customers-list">
+      <h3>Customers List</h3>
+      <ul>
+        <li *ngFor="let customer of customers">
+          <div>
+            <strong>Customer ID:</strong> {{customer.id}}
+          </div>
+          <div>
+            <strong>First Name:</strong> {{customer.first_name}}
+          </div>
+          <div>
+            <strong>Last Name:</strong> {{customer.last_name}}
+          </div>
+          <div>
+            <strong>Email:</strong> {{customer.email}}
+          </div>
+          <div>
+            <strong>Role:</strong> {{customer.role}}
+          </div>
+          <button (click)="customer.isEditing = !customer.isEditing">Edit</button>
+  
+          <!-- Edit Customer Form -->
+          <div *ngIf="customer.isEditing">
+            <form (ngSubmit)="updateCustomer(customer.id, customer); customer.isEditing = false">
+              <div>
+                <label for="edit_first_name">First Name:</label>
+                <input type="text" id="edit_first_name" [(ngModel)]="customer.first_name" name="edit_first_name" required>
+              </div>
+              <div>
+                <label for="edit_last_name">Last Name:</label>
+                <input type="text" id="edit_last_name" [(ngModel)]="customer.last_name" name="edit_last_name" required>
+              </div>
+              <div>
+                <label for="edit_email">Email:</label>
+                <input type="email" id="edit_email" [(ngModel)]="customer.email" name="edit_email" required>
+              </div>
+              <div>
+                <label for="edit_role">Role:</label>
+                <input type="role" id="edit_role" [(ngModel)]="customer.role" name="edit_role" required>
+              </div>
+              <button type="submit">Update Customer</button>
+              <button type="button" (click)="customer.isEditing = false">Cancel</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  

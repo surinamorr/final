@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = `${environment.apiUrl}/order`;
+  private api_url = environment.api_url + '/api/v1/orders';
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,45 +18,92 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   // Fetch all orders
-  getOrders(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl)
+  getAllOrders(): Observable<any> {
+    return this.http.get<any[]>(this.api_url + '/all-orders')
       .pipe(
-        catchError(this.handleError<any[]>('getOrders', []))
+        map((res) => {
+          return res;
+        })
+      );
+  }
+
+    // Fetch all order Details
+    getAllOrderDetails(): Observable<any> {
+      return this.http.get<any[]>(this.api_url + '/all-order-details')
+        .pipe(
+          map((res) => {
+            return res;
+          })
+        );
+    }
+
+  // Fetch a single Details order by ID
+  getSingleOrderDetails(id: number): Observable<any> {
+    return this.http.get<any[]>(this.api_url + '/single-order-details/' + id)
+      .pipe(
+        map((res) => {
+          return res;
+        })
       );
   }
 
   // Fetch a single order by ID
-  getOrderById(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<any>(url)
+  getSingleOrder(id: number): Observable<any> {
+    return this.http.get<any>(this.api_url + '/single-order/' + id)
       .pipe(
-        catchError(this.handleError<any>(`getOrderById id=${id}`))
+        map((res) => {
+          return res;
+        })
+      );
+  }
+
+    // Fetch all Logged In customer Orders
+    getAllUserOrders(): Observable<any> {
+      return this.http.get<any[]>(this.api_url + '/all-customer-orders')
+        .pipe(
+          map((res) => {
+            return res;
+          })
+        );
+    }
+
+  // Fetch a single order by ID
+  getSingleUserOrders(id: number): Observable<any> {
+    return this.http.get<any>(this.api_url + '/single-customer-order/' + id)
+      .pipe(
+        map((res) => {
+          return res;
+        })
       );
   }
 
   // Add a new order
-  addOrder(order: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, order, this.httpOptions)
+  createOrder(data: any): Observable<any> {
+    return this.http.post<any>(this.api_url + '/create-order', data)
       .pipe(
-        catchError(this.handleError<any>('addOrder'))
+        map((res) => {
+          return res;
+        })
       );
   }
 
   // Update an existing order
-  updateOrder(id: number, order: any): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.put(url, order, this.httpOptions)
+  updateOrder(id: number, data: any): Observable<any> {
+    return this.http.patch<any>(this.api_url + '/update-order/' + id, data)
       .pipe(
-        catchError(this.handleError<any>('updateOrder'))
+        map((res) => {
+          return res;
+        })
       );
   }
 
   // Delete an order
   deleteOrder(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<any>(url, this.httpOptions)
+    return this.http.delete<any>(this.api_url + '/delete-order/' + id)
       .pipe(
-        catchError(this.handleError<any>('deleteOrder'))
+        map((res) => {
+          return res;
+        })
       );
   }
 

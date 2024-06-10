@@ -1,13 +1,7 @@
-<div class="container">
-    <nav>
-      <ul>
-        <li><a routerLink="/home">Home</a></li>
-        <li><a routerLink="/menu">Menu</a></li>
-        <li><a routerLink="/customers">Customers</a></li>
-        <li><a routerLink="/orders">Orders</a></li>
-      </ul>
-    </nav>
+<div>
+  <app-header></app-header>
+  <div clas="min-h-screen flex flex-col">
     <router-outlet></router-outlet>
   </div>
-  
-  
+  <app-footer></app-footer>
+</div>

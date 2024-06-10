@@ -1,0 +1,68 @@
+<div class="menu-container">
+    <h2>Menu</h2>
+  
+    <!-- Starters List -->
+    <div class="menu-category">
+      <h3>Starters</h3>
+      <ul>
+        <li *ngFor="let starter of starters">
+          <div>
+            <strong>Name:</strong> {{starter.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{starter.price | currency}}
+          </div>
+          <button (click)="deleteStarter(starter.starter_id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Mains List -->
+    <div class="menu-category">
+      <h3>Mains</h3>
+      <ul>
+        <li *ngFor="let main of mains">
+          <div>
+            <strong>Name:</strong> {{main.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{main.price | currency}}
+          </div>
+          <button (click)="deleteMain(main.main_id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Desserts List -->
+    <div class="menu-category">
+      <h3>Desserts</h3>
+      <ul>
+        <li *ngFor="let dessert of desserts">
+          <div>
+            <strong>Name:</strong> {{dessert.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{dessert.price | currency}}
+          </div>
+          <button (click)="deleteDessert(dessert.dessert_id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Sides List -->
+    <div class="menu-category">
+      <h3>Sides</h3>
+      <ul>
+        <li *ngFor="let side of sides">
+          <div>
+            <strong>Name:</strong> {{side.name}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{side.price | currency}}
+          </div>
+          <button (click)="deleteSide(side.side_id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  

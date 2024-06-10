@@ -1,0 +1,65 @@
+<div class="orders-container">
+    <h2>Orders</h2>
+  
+    <!-- Form to Add New Order -->
+    <div class="orders-container">
+      <h2>Create Order</h2>
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+        <div>
+          <label for="customer_id">Customer ID:</label>
+          <input id="customer_id" formControlName="customer_id" type="number">
+        </div>
+        <div>
+          <label for="order_date">Order Date:</label>
+          <input id="order_date" formControlName="order_date" type="date">
+        </div>
+        <div>
+          <label for="total_price">Total Price:</label>
+          <input id="total_price" formControlName="total_price" type="number">
+        </div>
+    
+        <div formGroupName="starter">
+          <h3>Starter</h3>
+          <label for="starter_item_id">Item ID:</label>
+          <input id="starter_item_id" formControlName="item_id" type="number">
+          <label for="starter_quantity">Quantity:</label>
+          <input id="starter_quantity" formControlName="quantity" type="number">
+          <label for="starter_price">Price:</label>
+          <input id="starter_price" formControlName="price" type="number">
+        </div>
+    
+        <div formGroupName="main">
+          <h3>Main</h3>
+          <label for="main_item_id">Item ID:</label>
+          <input id="main_item_id" formControlName="item_id" type="number">
+          <label for="main_quantity">Quantity:</label>
+          <input id="main_quantity" formControlName="quantity" type="number">
+          <label for="main_price">Price:</label>
+          <input id="main_price" formControlName="price" type="number">
+        </div>
+    
+        <div formGroupName="dessert">
+          <h3>Dessert</h3>
+          <label for="dessert_item_id">Item ID:</label>
+          <input id="dessert_item_id" formControlName="item_id" type="number">
+          <label for="dessert_quantity">Quantity:</label>
+          <input id="dessert_quantity" formControlName="quantity" type="number">
+          <label for="dessert_price">Price:</label>
+          <input id="dessert_price" formControlName="price" type="number">
+        </div>
+    
+        <div formGroupName="side">
+          <h3>Side</h3>
+          <label for="side_item_id">Item ID:</label>
+          <input id="side_item_id" formControlName="item_id" type="number">
+          <label for="side_quantity">Quantity:</label>
+          <input id="side_quantity" formControlName="quantity" type="number">
+          <label for="side_price">Price:</label>
+          <input id="side_price" formControlName="price" type="number">
+        </div>
+    
+        <button type="submit">Submit Order</button>
+      </form>
+    </div>
+</div>
+  

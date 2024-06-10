@@ -1,78 +1,53 @@
-// const express = require('express');
-// const cors = require('cors');
-// require('dotenv').config();
-// const authController = require('./controllers/authController');
-// const customerController = require('./controllers/customerController');
-// const menuController = require('./controllers/menuController');
-// const orderController = require('./controllers/orderController');
-// const app = express();
-// const PORT = process.env.PORT || 3000;
+import express from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
-// app.use(cors());
-// app.use(express.json());
+import { customerRouter } from './routes/customerRoutes.js';
+import { menuRouter } from './routes/menuRoutes.js';
+import { orderRouter } from './routes/orderRoutes.js';
+import { authRouter } from './routes/authRoutes.js';
 
-// // Auth routes
-// app.post('/api/signup', authController.signup);
-// app.post('/api/login', authController.login);
+const app = express();
 
-// // Customer routes
-// app.get('/api/customers', customerController.getCustomers);
-// app.get('/api/customers/:id', customerController.getCustomerById);
-// app.post('/api/customers', customerController.addCustomer);
-// app.put('/api/customers/:id', customerController.updateCustomer);
-// app.delete('/api/customers/:id', customerController.deleteCustomer);
+dotenv.config({path: './config.env'});
 
-// // Menu routes
-// app.get('/api/menu', menuController.getMenuItems);
-// app.post('/api/menu', menuController.addMenuItem);
+app.use(morgan('dev'));
 
-// // Order routes
-// app.get('/api/orders', orderController.getOrders);
-// app.get('/api/orders/:id', orderController.getOrderById);
-// app.post('/api/orders', orderController.addOrder);
-// app.put('/api/orders/:id', orderController.updateOrder);
-// app.delete('/api/orders/:id', orderController.deleteOrder);
+//CORS Configuration
+app.options('*', cors(['http://localhost:4200']));
+app.use(cors(['http://localhost:4200']));
+
+//Body Parsing Configuration
+app.use(express.json({limit: '1kb'}));
+app.use(express.urlencoded({extended: true, limit: '1kb'}));
+
+// Auth routes
+  // app.post('/api/signup', authController.signup);
+  // app.post('/api/login', authController.login);
+
+// Customer routes
+  app.use('/api/v1/customers', customerRouter)
+
+// Menu routes
+  app.use('/api/v1/menu', menuRouter)
+
+// Order routes
+  app.use('/api/v1/orders', orderRouter)
+
+// Auth Routes
+  app.use('/api/v1/auth', authRouter)
+
+// Order routes
+  // app.get('/api/orders', orderController.getOrders);
+  // app.get('/api/orders/:id', orderController.getOrderById);
+  // app.post('/api/orders', orderController.addOrder);
+  // app.put('/api/orders/:id', orderController.updateOrder);
+  // app.delete('/api/orders/:id', orderController.deleteOrder);
 
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });
 
-
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const authController = require('./controller/authController');
-const customerController = require('./controller/customerController');
-const menuController = require('./controller/menuController');
-const orderController = require('./controller/orderController');
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-// Auth routes
-app.post('/api/signup', authController.signup);
-app.post('/api/login', authController.login);
-
-// Customer routes
-app.get('/api/customers', customerController.getCustomers);
-app.get('/api/customers/:id', customerController.getCustomerById);
-app.post('/api/customers', customerController.addCustomer);
-app.put('/api/customers/:id', customerController.updateCustomer);
-app.delete('/api/customers/:id', customerController.deleteCustomer);
-
-// Menu routes
-app.get('/api/menu', menuController.getMenuItems);
-app.post('/api/menu', menuController.addMenuItem);
-
-// Order routes
-app.get('/api/orders', orderController.getOrders);
-app.get('/api/orders/:id', orderController.getOrderById);
-app.post('/api/orders', orderController.addOrder);
-app.put('/api/orders/:id', orderController.updateOrder);
-app.delete('/api/orders/:id', orderController.deleteOrder);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => console.log(`listening on http://localhost:${port}`));

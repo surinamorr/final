@@ -1,0 +1,31 @@
+<div class="orders-container">
+    <h2>Orders</h2>
+  
+    <!-- Orders List -->
+    <div class="orders-list">
+      <h3>Orders List</h3>
+      <ul>
+        <li>
+          <div>
+            <strong>Order Detail ID:</strong> {{orderDetail.order_detail_id}}
+          </div>
+          <div>
+            <strong>Order ID:</strong> {{orderDetail.order_id}}
+          </div>
+          <div>
+            <strong>Item Type:</strong> {{orderDetail.item_type}}
+          </div>
+          <div>
+            <strong>Item ID:</strong> {{orderDetail.item_id}}
+          </div>
+          <div>
+            <strong>Quantity:</strong> {{orderDetail.quantity}}
+          </div>
+          <div>
+            <strong>Price:</strong> {{orderDetail.price | currency}}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  

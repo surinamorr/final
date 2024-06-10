@@ -5,6 +5,6 @@
   
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000/api'  // Point to your backend API URL
+    api_url: 'http://localhost:3000'  // Point to your backend API URL
   };
   

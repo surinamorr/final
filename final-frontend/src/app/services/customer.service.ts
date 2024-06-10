@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
-  private apiUrl = `${environment.apiUrl}/customers`;
+  private API_URL = environment.api_url + '/api/v1/customers';
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,41 +17,48 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
-  getCustomers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl)
+  getAllCustomers(): Observable<any> {
+    return this.http.get<any[]>(this.API_URL + '/all-customers')
       .pipe(
-        catchError(this.handleError<any[]>('getCustomers', []))
+        map((res) => {
+          return res;
+        })
       );
   }
 
-  getCustomerById(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<any>(url)
+  getSingleCustomer(id: number): Observable<any> {
+    return this.http.get<any>(this.API_URL + '/single-customer/' + id)
       .pipe(
-        catchError(this.handleError<any>(`getCustomerById id=${id}`))
+        map((res) => {
+          return res;
+        })
       );
   }
 
-  addCustomer(customer: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, customer, this.httpOptions)
+  createCustomer(data: any): Observable<any> {
+    return this.http.post<any>(this.API_URL + '/create-customer', data)
       .pipe(
-        catchError(this.handleError<any>('addCustomer'))
+        map((res) => {
+          return res;
+        })
       );
   }
 
-  updateCustomer(id: number, customer: any): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.put(url, customer, this.httpOptions)
+  updateCustomer(id: number, data: any): Observable<any> {
+    return this.http.patch<any>(this.API_URL + '/update-customer/' + id, data)
       .pipe(
-        catchError(this.handleError<any>('updateCustomer'))
+        map((res) => {
+          return res;
+        })
       );
   }
 
   deleteCustomer(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<any>(url, this.httpOptions)
+    return this.http.delete<any>(this.API_URL + '/delete-customer/' + id)
       .pipe(
-        catchError(this.handleError<any>('deleteCustomer'))
+        map((res) => {
+          return res;
+        })
       );
   }
 

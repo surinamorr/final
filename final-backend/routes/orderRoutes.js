@@ -1,96 +1,50 @@
-const express = require('express');
-const {
-  createOrder,
-  getOrderById,
-  getAllOrders,
-  updateOrder,
-  deleteOrder
-} = require('../models/order');
+import express from 'express';
 
-const {
-  createOrderDetail,
-  getAllOrderDetailsByOrderId
-} = require('../models/orderDetail');
+import { 
+  getSingleUserOrder,
+  getAllOrders, 
+  getSingleOrder, 
+  createOrder, 
+  updateOrder, 
+  deleteOrder,
+  getAllUserOrders,
+  getAllOrderDetails,
+  getSingleOrderDetails
+} from '../controller/orderController.js';
 
-const router = express.Router();
+import { protect } from '../controller/authController.js';
 
-// Get all orders
-router.get('/', async (req, res) => {
-  try {
-    const orders = await getAllOrders();
-    res.json(orders);
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.status(500).json({ error: 'An error occurred while fetching orders.' });
-  }
-});
+import { roleMiddleware } from '../middleware/roleMiddleware.js';
 
-// Get a single order by ID
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const order = await getOrderById(id);
-    if (order) {
-      const orderDetails = await getAllOrderDetailsByOrderId(id);
-      res.json({ ...order, orderDetails });
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    console.error('Error fetching order:', error);
-    res.status(500).json({ error: 'An error occurred while fetching the order.' });
-  }
-});
+export const orderRouter = express.Router();
+
+// USE PROTECTION
+  orderRouter.use(protect);
+
+// Get all Orders for Logged In User
+  orderRouter.get('/all-customer-orders', getAllUserOrders);
+
+// Get a single order for Logged In User by ID
+  orderRouter.get('/single-customer-order/:id', getSingleUserOrder);
 
 // Add a new order
-router.post('/', async (req, res) => {
-  const { customer_id, order_date, total_price, status, orderDetails } = req.body;
-  try {
-    const result = await createOrder(customer_id, order_date, total_price, status);
-    const newOrderId = result.insertId;
-
-    for (let detail of orderDetails) {
-      await createOrderDetail(newOrderId, detail.item_type, detail.item_id, detail.quantity, detail.price);
-    }
-
-    res.status(201).json({ order_id: newOrderId, customer_id, order_date, total_price, status, orderDetails });
-  } catch (error) {
-    console.error('Error adding order:', error);
-    res.status(500).json({ error: 'An error occurred while adding the order.' });
-  }
-});
+  orderRouter.post('/create-order', createOrder);
 
 // Update an existing order
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const { customer_id, order_date, total_price, status } = req.body;
-  try {
-    const result = await updateOrder(id, customer_id, order_date, total_price, status);
-    if (result.affectedRows > 0) {
-      res.json({ order_id: id, customer_id, order_date, total_price, status });
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    console.error('Error updating order:', error);
-    res.status(500).json({ error: 'An error occurred while updating the order.' });
-  }
-});
+  orderRouter.patch('/update-order/:id', updateOrder);
 
-// Delete an order
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await deleteOrder(id);
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Order deleted successfully.' });
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    res.status(500).json({ error: 'An error occurred while deleting the order.' });
-  }
-});
+// ADMIN ONLY
+  // Get all Order Details
+    orderRouter.get('/all-order-details', roleMiddleware('ADMIN'), getAllOrderDetails);
 
-module.exports = router;
+  // Get Single Order Details
+    orderRouter.get('/single-order-details/:id', roleMiddleware('ADMIN'), getSingleOrderDetails);
+
+  // Delete an order
+    orderRouter.delete('/delete-order/:id', roleMiddleware('ADMIN'), deleteOrder);
+
+  // Get all Customer Orders
+    orderRouter.get('/all-orders', roleMiddleware('ADMIN'), getAllOrders);
+        
+  // Get Single Customer Order
+    orderRouter.get('/single-order/:id', roleMiddleware('ADMIN'), getSingleOrder);

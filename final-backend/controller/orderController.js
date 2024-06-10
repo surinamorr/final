@@ -1,178 +1,269 @@
-// const pool = require('../config/db');
+import {pool} from '../config/db.js';
 
-// // Get all orders
-// const getOrders = async (req, res) => {
-//   try {
-//     const [orders] = await pool.promise().query(
-//       'SELECT orders.*, customers.first_name, customers.last_name, customers.email ' +
-//       'FROM orders ' +
-//       'JOIN customers ON orders.customer_id = customers.customer_id'
-//     );
-//     res.json(orders);
-//   } catch (error) {
-//     console.error('Error fetching orders:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching orders.' });
-//   }
-// };
-
-// // Get a single order by ID
-// const getOrderById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const [orders] = await pool.promise().query(
-//       'SELECT orders.*, customers.first_name, customers.last_name, customers.email ' +
-//       'FROM orders ' +
-//       'JOIN customers ON orders.customer_id = customers.customer_id ' +
-//       'WHERE orders.order_id = ?',
-//       [id]
-//     );
-
-//     const [orderDetails] = await pool.promise().query(
-//       'SELECT * FROM order_details WHERE order_id = ?',
-//       [id]
-//     );
-
-//     if (orders.length > 0) {
-//       res.json({ ...orders[0], orderDetails });
-//     } else {
-//       res.status(404).json({ error: 'Order not found.' });
-//     }
-//   } catch (error) {
-//     console.error('Error fetching order:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching the order.' });
-//   }
-// };
-
-// // Add a new order
-// const addOrder = async (req, res) => {
-//   const { customer_id, order_date, total_price, status, orderDetails } = req.body;
-//   try {
-//     const [result] = await pool.promise().query(
-//       'INSERT INTO orders (customer_id, order_date, total_price, status) VALUES (?, ?, ?, ?)',
-//       [customer_id, order_date, total_price, status]
-//     );
-
-//     const newOrderId = result.insertId;
-//     for (let detail of orderDetails) {
-//       await pool.promise().query(
-//         'INSERT INTO order_details (order_id, item_type, item_id, quantity, price) VALUES (?, ?, ?, ?, ?)',
-//         [newOrderId, detail.item_type, detail.item_id, detail.quantity, detail.price]
-//       );
-//     }
-//     res.status(201).json({ order_id: newOrderId, customer_id, order_date, total_price, status, orderDetails });
-//   } catch (error) {
-//     console.error('Error adding order:', error);
-//     res.status(500).json({ error: 'An error occurred while adding the order.' });
-//   }
-// };
-
-// // Update an existing order
-// const updateOrder = async (req, res) => {
-//   const { id } = req.params;
-//   const { customer_id, order_date, total_price, status } = req.body;
-//   try {
-//     const [result] = await pool.promise().query(
-//       'UPDATE orders SET customer_id = ?, order_date = ?, total_price = ?, status = ? WHERE order_id = ?',
-//       [customer_id, order_date, total_price, status, id]
-//     );
-
-//     if (result.affectedRows > 0) {
-//       res.json({ order_id: id, customer_id, order_date, total_price, status });
-//     } else {
-//       res.status(404).json({ error: 'Order not found.' });
-//     }
-//   } catch (error) {
-//     console.error('Error updating order:', error);
-//     res.status(500).json({ error: 'An error occurred while updating the order.' });
-//   }
-// };
-
-// // Delete an order
-// const deleteOrder = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const [result] = await pool.promise().query(
-//       'DELETE FROM orders WHERE order_id = ?',
-//       [id]
-//     );
-
-//     if (result.affectedRows > 0) {
-//       res.json({ message: 'Order deleted successfully.' });
-//     } else {
-//       res.status(404).json({ error: 'Order not found.' });
-//     }
-//   } catch (error) {
-//     console.error('Error deleting order:', error);
-//     res.status(500).json({ error: 'An error occurred while deleting the order.' });
-//   }
-// };
-
-// module.exports = { getOrders, getOrderById, addOrder, updateOrder, deleteOrder };
-
-
-
-const db = require('../config/db');
-
-exports.getOrders = async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM orders');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching orders.' });
+//ENDPOINT: api/v1/order/all-orders
+export const getAllOrders = async (req, res, next) => {
+  let sqlQuery = `SELECT * FROM orders`;
+  const [orders] = await pool.query(sqlQuery);
+  if (orders.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      results: orders.length,
+      data: { orders }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Server Error'
+    });
   }
-};
+}
 
-exports.getOrderById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [rows] = await db.query('SELECT * FROM orders WHERE order_id = ?', [id]);
-    if (rows.length > 0) {
-      res.json(rows[0]);
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching the order.' });
-  }
-};
+//ENDPOINT: api/v1/orders/single-order/:id
+export const getSingleOrder = async (req, res, next) => {
+  const id = req.params.id;
 
-exports.addOrder = async (req, res) => {
-  const { customer_id, order_date, total_price, status } = req.body;
-  try {
-    const [result] = await db.query('INSERT INTO orders (customer_id, order_date, total_price, status) VALUES (?, ?, ?, ?)', [customer_id, order_date, total_price, status]);
-    const newOrder = { order_id: result.insertId, customer_id, order_date, total_price, status };
-    res.status(201).json(newOrder);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the order.' });
+  let sqlQuery = `SELECT * FROM orders WHERE order_id = ?`;
+  const [orders] = await pool.query(sqlQuery, [id]);
+  if (orders.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      data: { orders: orders[0] }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not Found'
+    });
   }
-};
+}
 
-exports.updateOrder = async (req, res) => {
-  const { id } = req.params;
-  const { customer_id, order_date, total_price, status } = req.body;
-  try {
-    const [result] = await db.query('UPDATE orders SET customer_id = ?, order_date = ?, total_price = ?, status = ? WHERE order_id = ?', [customer_id, order_date, total_price, status, id]);
-    if (result.affectedRows > 0) {
-      const updatedOrder = { order_id: id, customer_id, order_date, total_price, status };
-      res.json(updatedOrder);
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while updating the order.' });
-  }
-};
+//ENDPOINT: api/v1/orders/all-customer-orders/
+export const getAllUserOrders = async (req, res, next) => {
+  // const id = req.params.id;
+  const id = req.user.id;
 
-exports.deleteOrder = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [result] = await db.query('DELETE FROM orders WHERE order_id = ?', [id]);
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Order deleted successfully.' });
-    } else {
-      res.status(404).json({ error: 'Order not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while deleting the order.' });
+  let sqlQuery = `
+    SELECT 
+      orders.order_id,
+      orders.order_date,
+      orders.total_price,
+      user_login.id,
+      user_login.first_name,
+      user_login.last_name,
+      order_details.item_type,
+      order_details.item_id,
+      order_details.quantity,
+      order_details.price
+    FROM 
+      orders
+    INNER JOIN 
+      order_details ON orders.order_id = order_details.order_id
+    INNER JOIN
+      user_login ON orders.user_id = user_login.id
+    WHERE 
+      orders.user_id = ?
+    ORDER BY 
+      orders.order_date DESC;
+  `;
+
+  const [orders] = await pool.query(sqlQuery, [id]);
+  if (orders.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      data: { orders }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not Found'
+    });
   }
-};
+}
+
+//ENDPOINT: api/v1/orders/single-customer-order/:id
+export const getSingleUserOrder = async (req, res, next) => {
+  const oid = req.params.id;
+  const uid = req.user.id;
+
+  console.log(oid);
+  console.log(uid);
+
+  let sqlQuery = `
+    SELECT 
+      orders.order_id,
+      orders.order_date,
+      orders.total_price,
+      user_login.id,
+      order_details.item_type,
+      order_details.item_id,
+      order_details.quantity,
+      order_details.price
+    FROM 
+      orders
+    INNER JOIN 
+      order_details ON orders.order_id = order_details.order_id
+    INNER JOIN
+      user_login ON orders.user_id = user_login.id
+    WHERE 
+      orders.user_id = ? AND orders.order_id = ?
+    ORDER BY 
+      orders.order_date DESC;
+  `;
+
+  const [orders] = await pool.query(sqlQuery, [uid, oid]);
+  if (orders.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      data: { orders }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not Found'
+    });
+  }
+}
+
+//ENDPOINT: api/v1/order/all-order-details
+export const getAllOrderDetails = async (req, res, next) => {
+  let sqlQuery = `SELECT * FROM order_details`;
+  const [orderDetails] = await pool.query(sqlQuery);
+  if (orderDetails.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      results: orderDetails.length,
+      data: { orderDetails }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Server Error'
+    });
+  }
+}
+
+//ENDPOINT: api/v1/order/single-order-details/:id
+export const getSingleOrderDetails = async (req, res, next) => {
+  const id = req.params.id;
+
+  let sqlQuery = `SELECT * FROM order_details WHERE order_detail_id = ?`;
+  const [orderDetails] = await pool.query(sqlQuery, [id]);
+  if (orderDetails.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      results: orderDetails.length,
+      data: { orderDetails }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Server Error'
+    });
+  }
+}
+
+//ENDPOINT: api/v1/order/create-order
+export const createOrder = async (req, res, next) => {
+  const {user_id, order_date, total_price, items} = req.body;
+
+  // VALIDATE THE REQUEST BODY
+  if (!Array.isArray(items)) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Invalid request body: items should be an array'
+    });
+  }
+
+  let sqlQuery = `INSERT INTO orders (user_id, order_date, total_price)
+                    VALUES (?, ?, ?)
+                  `;
+  const [orders] = await pool.query(sqlQuery,
+    [
+      user_id, order_date, total_price
+    ]
+  );
+  if (orders.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      InsertedID: orders.insertID,
+    });
+    console.log('Order Created Successfully');
+  } else {
+    res.status(400).json({
+      status: 'error',
+      message: 'Error Adding Order'
+    });
+    console.log('Order Not Created');
+  }
+
+  const order_id = orders.insertId;
+
+  const sqlQuery2 = `INSERT INTO order_details (order_id, item_type, item_id, quantity, price)
+                    VALUES (?, ?, ?, ?, ?)
+                  `;
+
+  let orderDetailResults = [];
+
+  for (const item of items) {
+    const { item_type, item_id, quantity, price } = item;
+    const [result] = await pool.query(sqlQuery2, [order_id, item_type, item_id, quantity, price]);
+    orderDetailResults.push(result);
+    console.log(`Inserted order detail ID: ${result.insertId}`);
+  }
+
+  const allInsertsSuccessful = orderDetailResults.every(result => result.affectedRows > 0);
+
+  if (allInsertsSuccessful) {
+    console.log('Order Details Created Successfully');
+  } else {
+    console.log('Order Details Not Created');
+  }
+}
+
+//ENDPOINT: api/v1/orders/update-order/:id
+export const updateOrder = async (req, res, next) => {
+  const id = req.params.id;
+  const {user_id, order_date, total_price} = req.body;
+
+  let sqlQuery = `UPDATE orders SET 
+                    user_id = ?, order_date = ?, total_price = ?
+                  WHERE order_id = ?`;
+  const [orders] = await pool.query(sqlQuery,
+    [
+      user_id, order_date, total_price, id
+    ]
+  );
+  if (orders.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      recordCount: orders.affectedRows
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not found'
+    });
+  }
+}
+
+//ENDPOINT: api/v1/orders/delete-order/:id
+export const deleteOrder = async (req, res, next) => {
+  const id = req.params.id;
+
+  let sqlQuery = `DELETE FROM order_details WHERE order_id = ?`;
+  let sqlQuery2 = `DELETE FROM orders WHERE order_id = ?`;
+  const [orderDetails] = await pool.query(sqlQuery, [id]);
+  const [orders] = await pool.query(sqlQuery2, [id]);
+  if (orders.affectedRows > 0 && orderDetails.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      orderRecordCounter: orders.affectedRows,
+      orderDetailsRecordCounter: orderDetails.affectedRows,
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Order Record Not Found'
+    });
+  }
+}

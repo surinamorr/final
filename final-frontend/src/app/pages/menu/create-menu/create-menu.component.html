@@ -1,0 +1,68 @@
+<div class="menu-container">
+    <h2>Menu</h2>
+  
+    <!-- Form to Add New Starter Item -->
+    <div class="starter-form">
+      <h3>Add New Starter Item</h3>
+      <form (ngSubmit)="addStarter(starter); newStarterForm.reset()" #newStarterForm="ngForm">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="starter.name" required>
+        </div>
+        <div>
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" [(ngModel)]="starter.price" required>
+        </div>
+        <button type="submit">Add Starter Item</button>
+      </form>
+    </div>
+  
+    <!-- Form to Add New Main Item -->
+    <div class="main-form">
+      <h3>Add New Main Item</h3>
+      <form (ngSubmit)="addMain(main); newMainForm.reset()" #newMainForm="ngForm">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="main.name" required>
+        </div>
+        <div>
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" [(ngModel)]="main.price" required>
+        </div>
+        <button type="submit">Add Main Item</button>
+      </form>
+    </div>
+  
+    <!-- Form to Add New Dessert Item -->
+    <div class="dessert-form">
+      <h3>Add New Dessert Item</h3>
+      <form (ngSubmit)="addDessert(dessert); newDessertForm.reset()" #newDessertForm="ngForm">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="dessert.name" required>
+        </div>
+        <div>
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" [(ngModel)]="dessert.price" required>
+        </div>
+        <button type="submit">Add Dessert Item</button>
+      </form>
+    </div>
+  
+    <!-- Form to Add New Side Item -->
+    <div class="side-form">
+      <h3>Add New Side Item</h3>
+      <form (ngSubmit)="addSide(side); newSideForm.reset()" #newSideForm="ngForm">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" [(ngModel)]="side.name" required>
+        </div>
+        <div>
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" [(ngModel)]="side.price" required>
+        </div>
+        <button type="submit">Add Side Item</button>
+      </form>
+    </div>
+</div>
+  

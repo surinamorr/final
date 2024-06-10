@@ -1,0 +1,81 @@
+<div class="menu-container">
+    <h2>Menu</h2>
+  
+      <!-- Starter Menu -->
+        <div class="customers-list">
+          <h3>Starters</h3>
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let starter of starters">
+                <td>{{starter.name}}</td>
+                <td>{{starter.price | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+    <!-- Main Menu -->
+      <div class="customers-list">
+        <h3>Mains</h3>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let main of mains">
+              <td>{{main.name}}</td>
+              <td>{{main.price | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+    <!-- Dessert Menu -->
+      <div class="customers-list">
+        <h3>Desserts</h3>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dessert of desserts">
+              <td>{{dessert.name}}</td>
+              <td>{{dessert.price | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Side Menu -->
+      <div class="customers-list">
+        <h3>Sides</h3>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let side of sides">
+              <td>{{side.name}}</td>
+              <td>{{side.price | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+</div>
+  

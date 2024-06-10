@@ -1,67 +1,147 @@
-// 
+import {pool} from '../config/db.js';
 
-const db = require('../config/db');
+import bcrypt from 'bcryptjs';
 
-exports.getCustomers = async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM customers');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching customers.' });
+//ENDPOINT: api/v1/customers/all-customers
+export const getAllCustomers = async (req, res, next) => {
+  let sqlQuery = `SELECT * FROM user_login`;
+  const [customers] = await pool.query(sqlQuery);
+
+  customers.forEach(customer => {
+    customer.password =  undefined;
+  });
+
+  if (customers.length > 0) {
+    res.status(200).json({
+      status: 'success',
+      results: customers.length,
+      data: { customers }
+      
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Server Error'
+    });
   }
-};
+}
 
-exports.getCustomerById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [rows] = await db.query('SELECT * FROM customers WHERE customer_id = ?', [id]);
-    if (rows.length > 0) {
-      res.json(rows[0]);
-    } else {
-      res.status(404).json({ error: 'Customer not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching the customer.' });
-  }
-};
+//ENDPOINT: api/v1/customers/single-customer/:id
+export const getSingleCustomer = async (req, res, next) => {
+  const id = req.params.id;
 
-exports.addCustomer = async (req, res) => {
-  const { first_name, last_name, email } = req.body;
-  try {
-    const [result] = await db.query('INSERT INTO customers (first_name, last_name, email) VALUES (?, ?, ?)', [first_name, last_name, email]);
-    const newCustomer = { customer_id: result.insertId, first_name, last_name, email };
-    res.status(201).json(newCustomer);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding the customer.' });
+  let sqlQuery = `SELECT * FROM user_login WHERE id = ?`;
+  const [customers] = await pool.query(sqlQuery, [id]);
+  if (customers.length > 0) {
+    customers[0].password = undefined;
+    res.status(200).json({
+      status: 'success',
+      data: { customers: customers[0] }
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not Found'
+    });
   }
-};
+}
 
-exports.updateCustomer = async (req, res) => {
-  const { id } = req.params;
-  const { first_name, last_name, email } = req.body;
-  try {
-    const [result] = await db.query('UPDATE customers SET first_name = ?, last_name = ?, email = ? WHERE customer_id = ?', [first_name, last_name, email, id]);
-    if (result.affectedRows > 0) {
-      const updatedCustomer = { customer_id: id, first_name, last_name, email };
-      res.json(updatedCustomer);
-    } else {
-      res.status(404).json({ error: 'Customer not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while updating the customer.' });
-  }
-};
+//ENDPOINT: api/v1/customers/create-customer
+export const createCustomer = async (req, res) => {
+  const { email, password, role, first_name, last_name } = req.body;
 
-exports.deleteCustomer = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const [result] = await db.query('DELETE FROM customers WHERE customer_id = ?', [id]);
-    if (result.affectedRows > 0) {
-      res.json({ message: 'Customer deleted successfully.' });
-    } else {
-      res.status(404).json({ error: 'Customer not found.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while deleting the customer.' });
+  if (await userExists(email)) {
+    res.status(400).json({
+      status: 'Error',
+      message: 'User already exists',
+    });
+    console.log('User already exists');
+    return;
   }
-};
+
+  const pwd = bcrypt.hashSync(password, 12);
+
+  let sqlQuery = `INSERT INTO user_login(email, password, role, first_name, last_name)
+                    VALUES(?,?,?,?, ?)
+                  `; 
+
+  const [result] = await pool.query(sqlQuery, 
+    [
+      email, pwd, role, first_name, last_name
+    ]
+  );
+
+  if(result.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      InsertedID: result.insertId,
+      message: 'User created successfully',
+    });
+    console.log('User created successfully');
+  } else {
+    res.status(400).json({
+      status: 'Eror',
+      message: 'User creation failed',
+    });
+    console.log('User creation failed');
+  }
+
+}
+
+//ENDPOINT: api/v1/customers/update-customer/:id
+export const updateCustomer = async (req, res, next) => {
+  const id = req.params.id;
+  const {first_name, last_name, email, role} = req.body;
+
+  let sqlQuery = `UPDATE user_login SET 
+                    first_name = ?, last_name = ?, email = ?, role = ?
+                  WHERE id = ?`;
+  const [customer] = await pool.query(sqlQuery,
+    [
+      first_name, last_name, email, role, id
+    ]
+  );
+  if (customer.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      recordCount: customer.affectedRows
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record not found'
+    });
+  }
+}
+
+//ENDPOINT: api/v1/customers/delete-customer/:id
+export const deleteCustomer = async (req, res, next) => {
+  const id = req.params.id;
+
+  let sqlQuery = `DELETE FROM user_login WHERE id = ?`;
+  const [customer] = await pool.query(sqlQuery, [id]);
+  if (customer.affectedRows > 0) {
+    res.status(200).json({
+      status: 'success',
+      recordCounter: customer.affectedRows
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Record Not Found'
+    });
+  }
+}
+
+async function userExists(email) {
+  let sqlQuery = `SELECT * FROM user_login WHERE email = ?`
+
+  const [user] = await pool.query(sqlQuery, [email]);
+
+  if (user.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+
+}

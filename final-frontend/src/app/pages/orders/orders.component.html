@@ -1,0 +1,202 @@
+<div class="orders-container">
+  <h2>Orders</h2>
+
+  <!-- Form to Add New Order -->
+  <div class="orders-container">
+    <h2>Create Order</h2>
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="customer_id">Customer ID:</label>
+        <input id="customer_id" formControlName="customer_id" type="number">
+      </div>
+      <div>
+        <label for="order_date">Order Date:</label>
+        <input id="order_date" formControlName="order_date" type="date">
+      </div>
+      <div>
+        <label for="total_price">Total Price:</label>
+        <input id="total_price" formControlName="total_price" type="number">
+      </div>
+  
+      <div formGroupName="starter">
+        <h3>Starter</h3>
+        <label for="starter_item_id">Item ID:</label>
+        <input id="starter_item_id" formControlName="item_id" type="number">
+        <label for="starter_quantity">Quantity:</label>
+        <input id="starter_quantity" formControlName="quantity" type="number">
+        <label for="starter_price">Price:</label>
+        <input id="starter_price" formControlName="price" type="number">
+      </div>
+  
+      <div formGroupName="main">
+        <h3>Main</h3>
+        <label for="main_item_id">Item ID:</label>
+        <input id="main_item_id" formControlName="item_id" type="number">
+        <label for="main_quantity">Quantity:</label>
+        <input id="main_quantity" formControlName="quantity" type="number">
+        <label for="main_price">Price:</label>
+        <input id="main_price" formControlName="price" type="number">
+      </div>
+  
+      <div formGroupName="dessert">
+        <h3>Dessert</h3>
+        <label for="dessert_item_id">Item ID:</label>
+        <input id="dessert_item_id" formControlName="item_id" type="number">
+        <label for="dessert_quantity">Quantity:</label>
+        <input id="dessert_quantity" formControlName="quantity" type="number">
+        <label for="dessert_price">Price:</label>
+        <input id="dessert_price" formControlName="price" type="number">
+      </div>
+  
+      <div formGroupName="side">
+        <h3>Side</h3>
+        <label for="side_item_id">Item ID:</label>
+        <input id="side_item_id" formControlName="item_id" type="number">
+        <label for="side_quantity">Quantity:</label>
+        <input id="side_quantity" formControlName="quantity" type="number">
+        <label for="side_price">Price:</label>
+        <input id="side_price" formControlName="price" type="number">
+      </div>
+  
+      <button type="submit">Submit Order</button>
+    </form>
+  </div>
+  
+  <!-- <div class="order-form">
+    <h3>Add New Order</h3>
+    <form (ngSubmit)="createOrder(order); newOrderForm.reset()" #newOrderForm="ngForm">
+      <div>
+        <label for="customer_id">Customer ID:</label>
+        <input type="number" id="customer_id" name="customer_id" [(ngModel)]="order.customer_id" required>
+      </div>
+      <div>
+        <label for="order_date">Order Date:</label>
+        <input type="date" id="order_date" name="order_date" [(ngModel)]="order.order_date" required>
+      </div>
+      <div>
+        <label for = "starterName"></label>
+        <span>{{ starter }}</span>
+        <input type="hidden" id="starter_name" name="starter_name" [value]="starter" #item_type>
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "starter_id">StarterID:</label>
+        <input type="number" id="starter_id" name="starter_id" [(ngModel)]="orderDetail.item_id">
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "quantity">Starter Quantity:</label>
+        <input type="number" id="quantity" name="quantity" [(ngModel)]="order.quantity">
+      </div>
+      <div>
+        <label for = "mainName"></label>
+        <span>{{ main }}</span>
+        <input type="hidden" id="main_name" name="main_name" [value]="main" #item_type>
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "main_id">MainID:</label>
+        <input type="number" id="main_id" name="main_id" [(ngModel)]="orderDetail.item_id">
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "quantity">Main Quantity:</label>
+        <input type="number" id="quantity" name="quantity" [(ngModel)]="order.quantity">
+      </div>
+      <div>
+        <label for = "dessertName"></label>
+        <span>{{ dessert }}</span>
+        <input type="hidden" id="dessert_name" name="dessert_name" [value]="dessert" #item_type>
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "dessert_id">DessertID:</label>
+        <input type="number" id="dessert_id" name="dessert_id" [(ngModel)]="orderDetail.item_id">
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "quantity">Dessert Quantity:</label>
+        <input type="number" id="quantity" name="quantity" [(ngModel)]="order.quantity">
+      </div>
+      <div>
+        <label for = "sideName"></label>
+        <span>{{ side }}</span>
+        <input type="hidden" id="side_name" name="sside_name" [value]="side" #item_type>
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "side_id">SideID:</label>
+        <input type="number" id="side_id" name="side_id" [(ngModel)]="orderDetail.item_id">
+      </div>
+      <div style="margin-left: 30px;">
+        <label for = "quantity">Side Quantity:</label>
+        <input type="number" id="quantity" name="quantity" [(ngModel)]="order.quantity">
+      </div>
+      <div>
+        <label for="total_price">Total Price:</label>
+        <input type="number" id="total_price" name="total_price" [(ngModel)]="order.total_price" required>
+      </div>
+      <button type="submit">Add Order</button>
+    </form>
+  </div> -->
+
+  <!-- List Order and Customer Details -->
+  <!-- <div>
+    <h3>Order Details</h3>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">Fist Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{order.customer_id}}</td>
+            <td>{{order.first_name}}</td>
+            <td>{{order.last_name}}</td>
+            <td>{{order.email}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div> -->
+
+  <!-- Orders List -->
+  <div class="orders-list">
+    <h3>Orders List</h3>
+    <ul>
+      <li *ngFor="let order of orders">
+        <div>
+          <strong>Order ID:</strong> {{order.order_id}}
+        </div>
+        <div>
+          <strong>Customer ID:</strong> {{order.customer_id}}
+        </div>
+        <div>
+          <strong>Order Date:</strong> {{order.order_date | date}}
+        </div>
+        <div>
+          <strong>Total Price:</strong> {{order.total_price | currency}}
+        </div>
+        <button (click)="deleteOrder(order.order_id)">Delete</button>
+        <button (click)="getSingleOrder(order.order_id)">Order Details</button>
+        <button (click)="order.isEditing = !order.isEditing">Edit</button>
+
+        <!-- Edit Order Form -->
+        <div *ngIf="order.isEditing">
+          <form (ngSubmit)="updateOrder(order.order_id, order); order.isEditing = false">
+            <div>
+              <label for="edit_customer_id">Customer ID:</label>
+              <input type="number" id="edit_customer_id" [(ngModel)]="order.customer_id" name="edit_customer_id" required>
+            </div>
+            <div>
+              <label for="edit_order_date">Order Date:</label>
+              <input type="date" id="edit_order_date" [(ngModel)]="order.order_date" name="edit_order_date" required>
+            </div>
+            <div>
+              <label for="edit_total_price">Total Price:</label>
+              <input type="number" id="edit_total_price" [(ngModel)]="order.total_price" name="edit_total_price" required>
+            </div>
+            <button type="submit">Update Order</button>
+            <button type="button" (click)="order.isEditing = false">Cancel</button>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
